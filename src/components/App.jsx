@@ -11,6 +11,19 @@ const INITIAL_STATE = {
 export class App extends Component {
   state = { ...INITIAL_STATE };
 
+  componentDidMount() {
+    let localData = localStorage.getItem('contacts');
+    if (localData && JSON.parse(localData).length > 0) {
+      this.setState({ contacts: JSON.parse(localData) });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts.length !== prevState.contacts.length) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   createContactData = contactData => {
     let sameContact = this.state.contacts.find(
       contact => contact.name.toLowerCase() === contactData.name.toLowerCase()
